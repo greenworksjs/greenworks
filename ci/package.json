@@ -1,0 +1,13 @@
+{
+  "name": "@greenworks/ci",
+  "version": "0.0.0",
+  "main": "index.js",
+  "author": "Armaldio",
+  "license": "MIT",
+  "dependencies": {
+    "typescript": "^4.5.5"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.14"
+  }
+}

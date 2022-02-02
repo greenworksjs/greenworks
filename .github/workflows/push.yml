@@ -1,0 +1,108 @@
+name: Build
+on:
+  push:
+
+jobs:
+  make_release:
+    name: Generate Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: get-npm-version
+        id: package-version
+        uses: tyankatsu0105/read-package-version-actions@v1
+
+      - name: Fetch tags
+        run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+
+      - id: checkTag
+        run: git show-ref --tags --verify --quiet -- "refs/tags/v${{ steps.package-version.outputs.version }}" && echo "::set-output name=tagged::1" || echo "::set-output name=tagged::0"
+
+      - run: echo ${{ steps.checkTag.outputs.tagged }}
+
+      - name: Create Release
+        id: create_release
+        if: steps.checkTag.outputs.tagged == 0
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.package-version.outputs.version }}
+          release_name: v${{ steps.package-version.outputs.version }}
+          draft: false
+          prerelease: true
+
+  build:
+    runs-on: ${{ matrix.os }}
+    continue-on-error: true
+    name: Build
+    needs: [make_matrix, make_release]
+    strategy:
+      matrix:
+        arch: [ia32, x64]
+        runtime: [nw.js, electron, node]
+        os: [macos-latest, ubuntu-latest, windows-latest]
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Checkout Node
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: "14.16.0"
+
+      - if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install gcc-multilib g++-multilib
+
+      - run: git clone https://github.com/greenworksjs/greenworks greenworks
+
+      # Install dep
+      - if: matrix.os == 'macos-latest'
+        run: brew install p7zip
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 2.7.18
+
+      - run: gcc -v
+
+      # Extract
+      - run: 7z x sdk.zip -y -p${{ secrets.ZIP_PASSWORD }}
+
+      - run: mv sdk greenworks/deps/steamworks_sdk
+      - run: npm install
+      - run: npm config set python python2.7
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
+        if: matrix.os == 'windows-latest'
+
+      - run: |
+          cd greenworks
+          npm install
+          cat package.json
+
+      - run: npx tsc
+      - name: "Build"
+        shell: bash
+        # env:
+        #   CXX: g++-10
+        #   CC: gcc-10
+        run: node dist/index.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --python=${{env.pythonLocation}}/bin/python
+
+      - name: get-npm-version
+        id: package-version
+        uses: tyankatsu0105/read-package-version-actions@v1
+
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GH_TOKEN }}
+          file: ./artifacts/*
+          tag: v${{ steps.package-version.outputs.version }}
+          overwrite: true
+          file_glob: true
