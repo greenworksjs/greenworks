@@ -1,0 +1,1 @@
+// https://github.com/nwjs/nw.js/issues/769

@@ -2,6 +2,8 @@
 node_modules/
 deps/steamworks_sdk
 build/
+artifacts/
+dist/
 lib/
 test/steam_appid.txt
 steam_appid.txt
@@ -9,3 +11,7 @@ steam_appid.txt
 .vscode/.browse.VC.db-wal
 .vscode/.BROWSE.VC.DB-shm
 .vscode/ipch
+
+ci/src/template/
+ci/src/utils/
+ci/**/*Downloader*
