@@ -15,7 +15,7 @@ jobs:
         uses: tyankatsu0105/read-package-version-actions@v1
 
       - name: Fetch tags
-        run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+        run: git fetch --depth=1 origin "+refs/tags/*:refs/tags/*""
 
       - id: checkTag
         run: git show-ref --tags --verify --quiet -- "refs/tags/v${{ steps.package-version.outputs.version }}" && echo "::set-output name=tagged::1" || echo "::set-output name=tagged::0"
