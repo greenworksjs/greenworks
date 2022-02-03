@@ -36,9 +36,12 @@ jobs:
 
   build:
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: ci
     continue-on-error: true
     name: Build
-    needs: [make_matrix, make_release]
+    needs: [make_release]
     strategy:
       matrix:
         arch: [ia32, x64]
@@ -52,7 +55,7 @@ jobs:
       - name: Checkout Node
         uses: actions/setup-node@v2-beta
         with:
-          node-version: "14.16.0"
+          node-version: "16.13.2"
 
       - if: matrix.os == 'ubuntu-latest'
         run: |
