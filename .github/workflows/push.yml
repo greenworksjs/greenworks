@@ -36,9 +36,6 @@ jobs:
 
   build:
     runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        working-directory: ci
     continue-on-error: true
     name: Build
     needs: [make_release]
@@ -62,8 +59,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install gcc-multilib g++-multilib
 
-      - run: git clone https://github.com/greenworksjs/greenworks greenworks
-
       # Install dep
       - if: matrix.os == 'macos-latest'
         run: brew install p7zip
@@ -76,26 +71,30 @@ jobs:
 
       # Extract
       - run: 7z x sdk.zip -y -p${{ secrets.ZIP_PASSWORD }}
+        working-directory: ci
 
-      - run: mv sdk greenworks/deps/steamworks_sdk
+      - run: mv sdk ../deps/steamworks_sdk
+        working-directory: ci
+
+      - run: ls
+      - run: ls deps/
       - run: npm install
+        working-directory: ci
       - run: npm config set python python2.7
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.0.2
         if: matrix.os == 'windows-latest'
 
-      - run: |
-          cd greenworks
-          npm install
-          cat package.json
+      - run: npm install
 
       - run: npx tsc
+        working-directory: ci
       - name: "Build"
         shell: bash
         # env:
         #   CXX: g++-10
         #   CC: gcc-10
-        run: node dist/index.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --python=${{env.pythonLocation}}/bin/python
+        run: node ./ci/dist/index.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --python=${{env.pythonLocation}}/bin/python
 
       - name: get-npm-version
         id: package-version

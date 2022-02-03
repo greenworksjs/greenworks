@@ -34,8 +34,8 @@ interface Args {
   python: string;
 }
 
-const GREENWORKS_ROOT = path.join(__dirname, '..', 'greenworks')
-const ARTIFACTS_ROOT = path.join(__dirname, '..', 'artifacts')
+const GREENWORKS_ROOT = path.join(process.cwd())
+const ARTIFACTS_ROOT = path.join(process.cwd(), 'artifacts')
 
 const argv = process.argv.slice(2)
 const args = mri(argv)
