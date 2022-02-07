@@ -145,10 +145,10 @@ const getVersions = async (): Promise<any> => {
   let everything = await abis.getAll()
 
   everything = everything
-    .filter((e) => e.version.includes(('alpha')))
+    .filter((e) => !e.version.includes(('alpha')))
 
   everything = everything
-    .filter((e) => e.version.includes(('unsupported')))
+    .filter((e) => !e.version.includes(('unsupported')))
 
   if (runtime === 'electron') {
     everything = getUnique(
