@@ -94,6 +94,7 @@ const electronRebuild = async (version: string): Promise<void> => {
       '--release',
       `--target=${version}`,
       `--arch=${arch}`,
+      `--openssl_fips=""`,
       '--dist-url=https://electronjs.org/headers',
       // `--python=${pythonPath}`,
     ],
@@ -113,6 +114,7 @@ const nodeRebuild = async (version: string): Promise<void> => {
       '--release',
       `--target=${version}`,
       `--arch=${arch}`,
+      `--openssl_fips=""`,
       // `--python=${pythonPath}`,
       // '--build_v8_with_gn=false'
     ],
@@ -130,6 +132,7 @@ const nwjsRebuild = async (version: string): Promise<void> => {
       '--release',
       `--target=${version}`,
       `--arch=${arch}`,
+      `--openssl_fips=""`,
       // `--python=${pythonPath}`
     ],
     {
@@ -140,6 +143,12 @@ const nwjsRebuild = async (version: string): Promise<void> => {
 
 const getVersions = async (): Promise<any> => {
   let everything = await abis.getAll()
+
+  everything = everything
+    .filter((e) => e.version.includes(('alpha')))
+
+  everything = everything
+    .filter((e) => e.version.includes(('unsupported')))
 
   if (runtime === 'electron') {
     everything = getUnique(
