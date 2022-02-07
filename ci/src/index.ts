@@ -27,6 +27,17 @@ const getUnique = (versions: MbaVersion[], key: keyof MbaVersion): MbaVersion[] 
   // @ts-ignore
   .map((e) => versions[e])
 
+function slash(slashPath: string) {
+  const isExtendedLengthPath = /^\\\\\?\\/.test(slashPath)
+  const hasNonAscii = /[^\u0000-\u0080]+/.test(slashPath) // eslint-disable-line no-control-regex
+
+  if (isExtendedLengthPath || hasNonAscii) {
+    return slashPath
+  }
+
+  return slashPath.replace(/\\/g, '/')
+}
+
 interface Args {
   os: 'macos-latest' | 'ubuntu-latest' | 'windows-latest';
   runtime: 'nw.js' | 'electron' | 'node';
@@ -50,7 +61,7 @@ const {
   os, runtime, arch, python,
 }: Args = args as unknown as Args
 
-const pythonPath = python
+const pythonPath = python ? slash(python) : undefined
 
 function getBinaryName(_arch: 'ia32' | 'x64'): string {
   let name = 'greenworks-'
@@ -73,87 +84,6 @@ function getBinaryName(_arch: 'ia32' | 'x64'): string {
   return path.resolve(path.join(GREENWORKS_ROOT, 'build', 'Release', name))
 }
 
-/**
- * Get release or create one based on the branch and the version from the package.json
- */
-/* const getRelease = async (): Promise<Release> => {
-  const releases = await listReleases();
-
-  let branch: string;
-  if (process.env.APPVEYOR_REPO_BRANCH) {
-    branch = process.env.APPVEYOR_REPO_BRANCH;
-  } else if (process.env.TRAVIS_BRANCH) {
-    branch = process.env.TRAVIS_BRANCH;
-  } else {
-    branch = 'unknown';
-  }
-
-  const tagName = `v${pkg.version}${branch === 'master' ? '' : `-${branch}`}`;
-  const release = releases.find((r) => r.tag_name === tagName);
-
-  if (release) {
-    console.log('Release exist, skipping');
-    return release;
-  }
-
-  console.log(`Release not found, creating ${tagName} ...`);
-  const data = {
-    tag_name: tagName,
-    name: tagName,
-    draft: true,
-    prerelease: false,
-  };
-
-  return createRelease(data);
-}; */
-
-/* const upload = async (assetLabel, release, arch) => {
-  console.log(`Done ${assetLabel}`);
-
-  const filePath = getBinaryName(arch);
-  shelljs.ls(path.dirname(filePath));
-
-  if (!fs.existsSync(filePath)) {
-    console.log(`File ${filePath} not found!`);
-    return undefined;
-  }
-
-  try {
-    const assetExist = release.assets.find((asset) => asset.name === assetLabel);
-    if (assetExist) {
-      console.log('Asset already exists !\nDeleting');
-      await deleteAsset(assetExist.url);
-    }
-  } catch (e) {
-    console.log('Error while deleting asset:');
-    const json = JSON.parse(e.body);
-
-    console.log('travis_fold:start:error');
-    console.log(json);
-    console.log('travis_fold:end:error');
-  }
-
-  try {
-    await uploadAsset(filePath, assetLabel, release);
-    console.log('Upload done');
-  } catch (e) {
-    console.log('Error while uploading asset:');
-    console.log(e);
-    console.log(e.response.body);
-    console.log(e.response.error);
-    const json = JSON.parse(e.body);
-    if (json.errors && json.errors[0] && json.errors[0].code === 'already_exists') {
-      console.log('Asset already exists');
-    } else {
-      console.log('travis_fold:start:error');
-      console.log(json);
-      console.log('travis_fold:end:error');
-    }
-  }
-
-  return true;
-}; */
-
 const electronRebuild = async (version: string): Promise<void> => {
   const { stderr, stdout } = await execa(
     path.resolve(
@@ -165,7 +95,7 @@ const electronRebuild = async (version: string): Promise<void> => {
       `--target=${version}`,
       `--arch=${arch}`,
       '--dist-url=https://electronjs.org/headers',
-      `--python=${pythonPath}`,
+      // `--python=${pythonPath}`,
     ],
     {
       cwd: GREENWORKS_ROOT,
@@ -178,7 +108,14 @@ const nodeRebuild = async (version: string): Promise<void> => {
     path.resolve(
       path.join(__dirname, '..', 'node_modules', '.bin', `node-gyp${os === 'windows-latest' ? '.cmd' : ''}`),
     ),
-    ['rebuild', '--release', `--target=${version}`, `--arch=${arch}`, `--python=${pythonPath}`, '--build_v8_with_gn=false'],
+    [
+      'rebuild',
+      '--release',
+      `--target=${version}`,
+      `--arch=${arch}`,
+      // `--python=${pythonPath}`,
+      // '--build_v8_with_gn=false'
+    ],
     {
       cwd: GREENWORKS_ROOT,
     },
@@ -188,7 +125,13 @@ const nodeRebuild = async (version: string): Promise<void> => {
 const nwjsRebuild = async (version: string): Promise<void> => {
   await execa(
     path.resolve(path.join(__dirname, '..', 'node_modules', '.bin', `nw-gyp${os === 'windows-latest' ? '.cmd' : ''}`)),
-    ['rebuild', '--release', `--target=${version}`, `--arch=${arch}`, `--python=${pythonPath}`],
+    [
+      'rebuild',
+      '--release',
+      `--target=${version}`,
+      `--arch=${arch}`,
+      // `--python=${pythonPath}`
+    ],
     {
       cwd: GREENWORKS_ROOT,
     },
@@ -217,6 +160,8 @@ const getVersions = async (): Promise<any> => {
       'abi',
     )
   }
+
+  console.log('everything', everything)
 
   const matrix: any[] = []
   for (let i = 0; i < everything.length; i += 1) {
