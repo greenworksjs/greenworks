@@ -2,7 +2,8 @@
   'variables': {
     'source_root_dir': '<!(python tools/source_root_dir.py)',
     'steamworks_sdk_dir': '<(source_root_dir)/deps/steamworks_sdk',
-    'target_dir': '<(source_root_dir)/lib'
+    'target_dir': '<(source_root_dir)/lib',
+    'openssl_fips': ''
   },
 
   'conditions': [

@@ -35,7 +35,7 @@ interface Args {
 }
 
 const GREENWORKS_ROOT = path.join(process.cwd())
-const ARTIFACTS_ROOT = path.join(process.cwd(), 'artifacts')
+const ARTIFACTS_ROOT = path.join(process.cwd(), 'ci', 'artifacts')
 
 const argv = process.argv.slice(2)
 const args = mri(argv)
