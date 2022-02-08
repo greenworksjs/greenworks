@@ -94,7 +94,7 @@ const electronRebuild = async (version: string): Promise<void> => {
       '--release',
       `--target=${version}`,
       `--arch=${arch}`,
-      `--openssl_fips=""`,
+      `--openssl_fips=false`,
       '--dist-url=https://electronjs.org/headers',
       // `--python=${pythonPath}`,
     ],
@@ -114,7 +114,7 @@ const nodeRebuild = async (version: string): Promise<void> => {
       '--release',
       `--target=${version}`,
       `--arch=${arch}`,
-      `--openssl_fips=""`,
+      `--openssl_fips=false`,
       // `--python=${pythonPath}`,
       // '--build_v8_with_gn=false'
     ],
@@ -132,7 +132,7 @@ const nwjsRebuild = async (version: string): Promise<void> => {
       '--release',
       `--target=${version}`,
       `--arch=${arch}`,
-      `--openssl_fips=""`,
+      `--openssl_fips=false`,
       // `--python=${pythonPath}`
     ],
     {
@@ -170,13 +170,12 @@ const getVersions = async (): Promise<any> => {
     )
   }
 
-  console.log('everything', everything)
-
   const matrix: any[] = []
   for (let i = 0; i < everything.length; i += 1) {
     const version = everything[i]
 
-    if (version.abi < 70) {
+    // abi 93 is node 14 LTS
+    if (version.abi < 83) {
       // eslint-disable-next-line
       continue
     }
@@ -226,8 +225,6 @@ const build = async (matrix: any): Promise<void> => {
 
   const filePath = getBinaryName(matrix.arch)
 
-  console.log('filePath', filePath)
-
   if (!fs.existsSync(filePath)) {
     console.log(`File ${filePath} not found!`)
     return
@@ -235,7 +232,7 @@ const build = async (matrix: any): Promise<void> => {
 
   const dest = path.join(ARTIFACTS_ROOT, assetLabel)
 
-  console.log('dest', dest)
+  console.log('Output:', dest)
 
   await fs.copy(filePath, dest)
 }
