@@ -44,6 +44,9 @@ jobs:
         arch: [ia32, x64]
         runtime: [nw.js, electron, node]
         os: [macos-latest, ubuntu-latest, windows-latest]
+        exclude:
+          - os: macos-latest
+            arch: ia32
       fail-fast: false
     steps:
       - name: Checkout

@@ -180,13 +180,6 @@ const getVersions = async (): Promise<any> => {
       continue
     }
 
-    if (
-      runtime === 'electron' && os === 'macos-latest' && arch === 'ia32'
-    ) {
-      // eslint-disable-next-line
-      continue
-    }
-
     matrix.push({
       runtime,
       abi: version.abi,
