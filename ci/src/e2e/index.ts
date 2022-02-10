@@ -1,5 +1,6 @@
 import execa from 'execa'
 import mri from 'mri'
+import path from 'path'
 
 const argv = process.argv.slice(2)
 const args = mri(argv)
@@ -18,7 +19,7 @@ void (async (): Promise<void> => {
     console.log('testing', os, runtime, arch)
 
     if (runtime === 'node') {
-        const { stderr, stdout } = await execa('node', ['./node.js', association[os], arch])
+        const { stderr, stdout } = await execa('node', [path.join(__dirname, './node.js'), association[os], arch])
         console.log('stderr', stderr)
         console.log('stdout', stdout)
     } else {
