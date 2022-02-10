@@ -38,8 +38,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     name: Build
     needs: [make_release]
+    continue-on-error: true
     strategy:
+      fail-fast: false
       matrix:
+
         arch: [ia32, x64]
         runtime: [nwjs, electron, node]
         os: [macos-latest, ubuntu-latest, windows-latest]

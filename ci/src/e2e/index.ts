@@ -48,7 +48,7 @@ void (async (): Promise<void> => {
 
         await fs.copy(steamBinaryPath, __dirname)
 
-        const { stderr: a, stdout: b } = await execa('ls')
+        const { stderr: a, stdout: b } = await execa('ls', [__dirname])
         console.log('stderr', a)
         console.log('stdout', b)
 
