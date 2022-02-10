@@ -99,7 +99,7 @@ jobs:
 
       - name: "Test"
         shell: bash
-        run: node ./ci/dist/e2e/${{matrix.runtime}}.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}}
+        run: node ./ci/dist/e2e/index.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}}
 
       # - name: get-npm-version
       #   id: package-version
