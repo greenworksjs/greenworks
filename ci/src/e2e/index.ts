@@ -22,7 +22,7 @@ const steamAssoc = (arch: string, os: string) => {
     const ass = {
         'ubuntu-latest': 'linux' + computedArch,
         'windows-latest': 'win' + computedArch,
-        'macos-latest': 'os',
+        'macos-latest': 'osx',
     }
 
     // @ts-ignore
