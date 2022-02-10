@@ -1,7 +1,7 @@
 interface MbaVersion {
   version: string;
   abi: number;
-  runtime: string;
+  runtime: 'electron' | 'nwjs' | 'node';
 }
 
 declare module 'modules-abi' {
