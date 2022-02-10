@@ -8,6 +8,12 @@ declare module 'modules-abi' {
   function getAll(): Promise<MbaVersion[]>;
 }
 
+interface Args {
+  os: 'macos-latest' | 'ubuntu-latest' | 'windows-latest';
+  runtime: 'nw.js' | 'electron' | 'node';
+  arch: 'ia32' | 'x64';
+  python: string;
+}
 
 declare module 'unzipper'
 declare module 'tar'

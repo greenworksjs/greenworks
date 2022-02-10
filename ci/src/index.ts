@@ -34,13 +34,6 @@ function slash(slashPath: string) {
   return slashPath.replace(/\\/g, '/');
 }
 
-interface Args {
-  os: 'macos-latest' | 'ubuntu-latest' | 'windows-latest';
-  runtime: 'nw.js' | 'electron' | 'node';
-  arch: 'ia32' | 'x64';
-  python: string;
-}
-
 const GREENWORKS_ROOT = path.join(process.cwd())
 const ARTIFACTS_ROOT = path.join(process.cwd(), 'ci', 'artifacts')
 
@@ -181,10 +174,7 @@ void (async (): Promise<void> => {
   await fs.remove(path.resolve(path.join(GREENWORKS_ROOT, 'build')))
   await fs.ensureDir(ARTIFACTS_ROOT)
 
-  try {
-    await build()
-    console.log('Done')
-  } catch (e) {
-    console.log('Error during build', e)
-  }
+  throw new Error('Oops')
+
+  await build()
 })()

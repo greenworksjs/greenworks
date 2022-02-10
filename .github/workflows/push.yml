@@ -36,7 +36,6 @@ jobs:
 
   build:
     runs-on: ${{ matrix.os }}
-    continue-on-error: true
     name: Build
     needs: [make_release]
     strategy:
@@ -47,7 +46,7 @@ jobs:
         exclude:
           - os: macos-latest
             arch: ia32
-      fail-fast: false
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -70,8 +69,6 @@ jobs:
         with:
           python-version: 2.7.18
 
-      - run: gcc -v
-
       # Extract
       - run: 7z x sdk.zip -y -p${{ secrets.ZIP_PASSWORD }}
         working-directory: ci
@@ -79,11 +76,11 @@ jobs:
       - run: mv sdk ../deps/steamworks_sdk
         working-directory: ci
 
-      - run: ls
-      - run: ls deps/
       - run: npm install
         working-directory: ci
+
       - run: npm config set python python2.7
+
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.0.2
         if: matrix.os == 'windows-latest'
@@ -92,6 +89,7 @@ jobs:
 
       - run: npx tsc
         working-directory: ci
+
       - name: "Build"
         shell: bash
         # env:
@@ -99,9 +97,13 @@ jobs:
         #   CC: gcc-10
         run: node ./ci/dist/index.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}}
 
-      - name: get-npm-version
-        id: package-version
-        uses: tyankatsu0105/read-package-version-actions@v1
+      - name: "Test"
+        shell: bash
+        run: node ./ci/dist/e2e/${{matrix.runtime}}.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}}
+
+      # - name: get-npm-version
+      #   id: package-version
+      #   uses: tyankatsu0105/read-package-version-actions@v1
 
       # - name: Upload binaries to release
       #   uses: svenstaro/upload-release-action@v2
