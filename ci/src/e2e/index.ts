@@ -44,11 +44,11 @@ void (async (): Promise<void> => {
             steamAssoc(arch, os)
         )
 
-        console.log('steamBinaryPath', steamBinaryPath)
+        const artifactsPath = path.join(__dirname, '../../artifacts')
 
-        await fs.copy(steamBinaryPath, __dirname)
+        await fs.copy(steamBinaryPath, artifactsPath)
 
-        const { stderr: a, stdout: b } = await execa('ls', [__dirname])
+        const { stderr: a, stdout: b } = await execa('ls', [artifactsPath])
         console.log('stderr', a)
         console.log('stdout', b)
 
@@ -59,6 +59,10 @@ void (async (): Promise<void> => {
         ], { cwd: __dirname })
         console.log('stderr', stderr)
         console.log('stdout', stdout)
+
+        if (!stderr.includes('did not locate a running instance of Steam')) {
+            throw new Error('Test failed' + stderr)
+        }
     } else {
         console.log('TODO')
     }
