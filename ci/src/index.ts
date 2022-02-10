@@ -174,7 +174,5 @@ void (async (): Promise<void> => {
   await fs.remove(path.resolve(path.join(GREENWORKS_ROOT, 'build')))
   await fs.ensureDir(ARTIFACTS_ROOT)
 
-  throw new Error('Oops')
-
   await build()
 })()
