@@ -56,7 +56,7 @@ void (async (): Promise<void> => {
             path.join(__dirname, './node.js'),
             association[os],
             arch
-        ])
+        ], { cwd: __dirname })
         console.log('stderr', stderr)
         console.log('stdout', stdout)
     } else {
