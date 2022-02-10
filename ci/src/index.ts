@@ -141,7 +141,7 @@ const build = async (): Promise<void> => {
       await electronRebuild()
       break
 
-    case 'nw.js':
+    case 'nwjs':
       await nwjsRebuild()
       break
 

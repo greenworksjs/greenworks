@@ -10,7 +10,7 @@ declare module 'modules-abi' {
 
 interface Args {
   os: 'macos-latest' | 'ubuntu-latest' | 'windows-latest';
-  runtime: 'nw.js' | 'electron' | 'node';
+  runtime: 'nwjs' | 'electron' | 'node';
   arch: 'ia32' | 'x64';
   python: string;
 }

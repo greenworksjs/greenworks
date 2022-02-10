@@ -41,7 +41,7 @@ jobs:
     strategy:
       matrix:
         arch: [ia32, x64]
-        runtime: [nw.js, electron, node]
+        runtime: [nwjs, electron, node]
         os: [macos-latest, ubuntu-latest, windows-latest]
         exclude:
           - os: macos-latest

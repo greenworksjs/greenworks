@@ -1,6 +1,5 @@
-export default (os: string, arch: string) => {
-    var greenworks = require(`../../artifacts/greenworks-node-${os}-${arch}.node`);
+console.log('process.argv', process.argv)
+var greenworks = require(`../../artifacts/greenworks-node-${process.argv[1]}-${process.argv[2]}.node`);
 
-    console.log('greenworks', greenworks)
-    console.log('done ?', greenworks.initialize());
-}
+console.log('greenworks', greenworks)
+console.log('done ?', greenworks.initialize());
