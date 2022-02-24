@@ -1,5 +1,5 @@
 {
-    "name": "greenworks",
+    "name": "@greenworksjs/greenworks",
     "version": "0.4.1",
     "description": "A node.js addon exposing Valve's Steamworks APIs to JavaScript",
     "main": "greenworks.js",
