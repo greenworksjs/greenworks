@@ -108,16 +108,14 @@ jobs:
         id: package-version
         uses: tyankatsu0105/read-package-version-actions@v1
 
-
-      - run: ls -la ./artifacts
-
       - uses: actions/upload-artifact@v2
         with:
-          path: ./artifacts/
+          path: ./ci/artifacts/
 
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    needs: [build]
     steps:
       - uses: actions/download-artifact@v2
         with:
