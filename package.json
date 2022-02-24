@@ -1,17 +1,22 @@
 {
-    "name": "greenworks",
+    "name": "@greenworksjs/greenworks",
     "version": "0.4.1",
     "description": "A node.js addon exposing Valve's Steamworks APIs to JavaScript",
-    "license": "UNLICENSED",
+    "main": "greenworks.js",
+    "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://wayward.visualstudio.com/Wayward/_git/greenworks"
+        "url": "https://github.com/greenworksjs/greenworks"
     },
-    "licenses": [
-        {
-            "type": "MIT",
-            "url": "https://github.com/greenheartgames/greenworks/blob/master/LICENSE"
-        }
+    "bugs": {
+        "url": "https://github.com/greenworksjs/greenworks/issues"
+    },
+    "homepage": "https://github.com/greenworksjs/greenworks#readme",
+    "keywords": [
+        "steam",
+        "steamworks",
+        "greenworks",
+        "sdk"
     ],
     "dependencies": {
         "archiver": "2.1.1",
