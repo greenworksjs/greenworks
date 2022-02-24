@@ -15,6 +15,7 @@ jobs:
         uses: tyankatsu0105/read-package-version-actions@v1
 
       - name: Fetch tags
+        continue-on-error: true
         run: git fetch --depth=1 origin "+refs/tags/*:refs/tags/*"
 
       - id: checkTag
