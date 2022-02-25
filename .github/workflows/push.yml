@@ -3,42 +3,9 @@ on:
   push:
 
 jobs:
-  make_release:
-    name: Generate Release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      # - name: get-npm-version
-      #   id: package-version
-      #   uses: tyankatsu0105/read-package-version-actions@v1
-
-      # - name: Fetch tags
-      #   continue-on-error: true
-      #   run: git fetch --depth=1 origin "+refs/tags/*:refs/tags/*"
-
-      # - id: checkTag
-      #   run: git show-ref --tags --verify --quiet -- "refs/tags/v${{ steps.package-version.outputs.version }}" && echo "::set-output name=tagged::1" || echo "::set-output name=tagged::0"
-
-      # - run: echo ${{ steps.checkTag.outputs.tagged }}
-
-      # - name: Create Release
-      #   id: create_release
-      #   if: steps.checkTag.outputs.tagged == 1
-      #   uses: actions/create-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     tag_name: v${{ steps.package-version.outputs.version }}
-      #     release_name: v${{ steps.package-version.outputs.version }}
-      #     draft: false
-      #     prerelease: true
-
   build:
     runs-on: ${{ matrix.os }}
     name: Build
-    needs: [make_release]
     continue-on-error: false
     strategy:
       fail-fast: false
@@ -95,9 +62,6 @@ jobs:
 
       - name: "Build"
         shell: bash
-        # env:
-        #   CXX: g++-10
-        #   CC: gcc-10
         run: node ./ci/dist/index.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}}
 
       # - name: "Test"
