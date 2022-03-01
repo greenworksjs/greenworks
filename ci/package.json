@@ -1,0 +1,23 @@
+{
+  "name": "@greenworks/ci",
+  "version": "0.0.0",
+  "main": "index.js",
+  "author": "Armaldio",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "execa": "5",
+    "fs-extra": "^10.0.0",
+    "modules-abi": "^0.3.4",
+    "mri": "^1.2.0",
+    "node-gyp": "^8.4.1",
+    "nw-gyp": "^3.6.5",
+    "source-map-support": "^0.5.21",
+    "typescript": "^4.5.5"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^9.0.13",
+    "@types/node": "^17.0.15",
+    "@types/source-map-support": "^0.5.4"
+  }
+}
